@@ -11,10 +11,10 @@
 Создать `MVP` приложения, которое вычисляет и отображает метрики, выявляющие различия между двумя изображениями.
 
 ## Tasks 
-- [ ] Create functions `get_dataset` and `get_dataloader` for loading images from dataset TID2013
-- [ ] Create function `get_metrics` for calculating image quality metrics
-- [ ] Test piq metrics on TID2013 dataset
-- [ ] Test sewar metrics on TID2013 dataset
+- [ ] <s>Create functions`get_dataset` and `get_dataloader` for loading images from dataset TID2013</s>
+- [x] Create function `get_metrics` for calculating image quality metrics
+- [x] Test piq metrics on TID2013 dataset
+- [x] Test sewar metrics on TID2013 dataset
 - [ ] Test VQMT metrics on TID2013 dataset
 - [ ] Test FOVQA metrics on TID2013 dataset
 - [ ] Test Image Quality Tools metrics on TID2013 dataset
@@ -26,5 +26,11 @@
 > Для этого создал класс `TID2013Dataset`.
 > Попытался учесть ошибки, которые могут возникнуть при загрузке данных.
 > Dataset занимает `~7Gb` оперативной памяти.
+
+> Начал переписывать функции из последнего репозитория на `python`, там получается работы с 2D 1 channel изображениями?
+
+> Сделал backend и frontend, в который уже нормально можно добавлять новые метрики.
+> Использовал `FastAPI` и `Streamlit`.
+> Завернул в `Docker` контейнеры.
 
 Репозиторий с MVP: [Image Quality]()
