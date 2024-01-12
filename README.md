@@ -33,4 +33,7 @@
 > Использовал `FastAPI` и `Streamlit`.
 > Завернул в `Docker` контейнеры.
 
-Репозиторий с MVP: [Image Quality]()
+> Остальные репозитории с метриками для видео (VQMT, FOVQA)
+> Потом попробую завернуть в отдельные микросервисы.
+
+Репозиторий с MVP: [Image Quality](https://github.com/ChS23/ImageQuality)
