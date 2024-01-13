@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.signal import convolve2d
-from scipy.ndimage import gaussian_filter
 
 
 def ssim(
@@ -10,11 +9,6 @@ def ssim(
         window=None,
         L: float = None
 ) -> tuple:
-    def _fspecial_gauss(size, sigma):
-        x, y = np.mgrid[-size // 2 + 1:size // 2 + 1, -size // 2 + 1:size // 2 + 1]
-        g = np.exp(-((x ** 2 + y ** 2) / (2.0 * sigma ** 2)))
-        return g / g.sum()
-
     def _matlab_style_gauss2D(shape=(3, 3), sigma=0.5):
         """
         2D gaussian mask - should give the same result as MATLAB's
@@ -50,8 +44,6 @@ def ssim(
         if (M < 11) or (N < 11):
             return -np.inf, -np.inf
 
-        # window = gaussian_filter(np.ones((11, 11)), 1.5)
-        # window = _fspecial_gauss(11, 1.5)
         window = _matlab_style_gauss2D((11, 11), 1.5)
         K = (0.01, 0.03)
         L = 255
@@ -64,9 +56,6 @@ def ssim(
     if f > 1:
         lpf = np.ones((f, f)) / f ** 2
 
-        # Необходимо заменить на python аналог
-        # img1 = imfilter(img1,lpf,'symmetric','same');
-        # img2 = imfilter(img2,lpf,'symmetric','same');
         img1 = convolve2d(img1, lpf, mode='same', boundary='symm')
         img2 = convolve2d(img2, lpf, mode='same', boundary='symm')
 
@@ -76,18 +65,12 @@ def ssim(
     C1 = (K[0] * L) ** 2
     C2 = (K[1] * L) ** 2
 
-    window = window / np.sum(np.sum(window))
-    # ssim_map = convolve(img1, window, mode='reflect')
-    # w1 = convolve(img2, window, mode='reflect')
-
-    # Необходимо заменить на python аналог
+    window = window / np.sum(window)
     ssim_map = filter2(window, img1, 'valid')
-    # ssim_map = convolve2d(window, img1, mode='valid')
     w1 = filter2(window, img2, 'valid')
     w2 = ssim_map * w1
     w2 = 2 * w2 + C1
     w1 = (w1 - ssim_map) ** 2 + w2
-    # ssim_map = convolve(img1 * img2, window, mode='reflect')
     ssim_map = filter2(window, img1 * img2, 'valid')
     ssim_map = (2 * ssim_map + (C1 + C2)) - w2
     ssim_map *= w2
@@ -96,13 +79,11 @@ def ssim(
     img1 = img1 + img2
 
     if C1 > 0 and C2 > 0:
-        # w2 = convolve(img1, window, mode='reflect')
         w2 = filter2(window, img1, 'valid')
         w2 = w2 - w1 + (C1 + C2)
         w2 = w2 * w1
         ssim_map /= w2
     else:
-        # w3 = convolve(img1, window, mode='reflect')
         w3 = filter2(window, img1, 'valid')
         w3 = w3 - w1 + (C1 + C2)
         w4 = np.ones_like(w1)
